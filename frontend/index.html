@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StockSense - Inventory Tracker</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="/chart.js"></script>
+ 
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav>
+    <div class="logo">📦 StockSense</div>
+    <div class="nav-links">
+      <a href="#dashboard">Dashboard</a>
+      <a href="#products">Products</a>
+      <a href="#alerts">Alerts</a>
+    </div>
+  </nav>
+
+  <!-- DASHBOARD STATS -->
+  <section id="dashboard">
+    <h2>Dashboard</h2>
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-icon">📦</div>
+        <div class="stat-val" id="total-products">0</div>
+        <div class="stat-label">Total Products</div>
+      </div>
+      <div class="stat-card warn">
+        <div class="stat-icon">⚠️</div>
+        <div class="stat-val" id="expiring-soon">0</div>
+        <div class="stat-label">Expiring Soon</div>
+      </div>
+      <div class="stat-card green">
+        <div class="stat-icon">🏷️</div>
+        <div class="stat-val" id="total-stock">0</div>
+        <div class="stat-label">Total Stock</div>
+      </div>
+    </div>
+    <!-- CHARTS SECTION -->
+  <section id="charts">
+    <h2>📊 Analytics</h2>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;">
+      <div class="form-card">
+        <h3 style="margin-bottom:16px;font-size:1rem;color:#7a8899;">Category wise Products</h3>
+        <canvas id="categoryChart" height="300"></canvas>
+      </div>
+      <div class="form-card">
+        <h3 style="margin-bottom:16px;font-size:1rem;color:#7a8899;">Expiry Status</h3>
+       <canvas id="expiryChart" height="300"></canvas>
+      </div>
+      </div>
+  </section>
+
+
+  <!-- ADD PRODUCT FORM -->
+  <section id="products">
+    <h2>Add Product</h2>
+    <div class="form-card">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Product Name</label>
+          <input type="text" id="name" placeholder="eg: Milk">
+        </div>
+        <div class="form-group">
+          <label>Category</label>
+          <select id="category">
+            <option value="Dairy">Dairy</option>
+            <option value="Bakery">Bakery</option>
+            <option value="Vegetables">Vegetables</option>
+            <option value="Medicines">Medicines</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Quantity</label>
+          <input type="number" id="quantity" placeholder="eg: 100">
+        </div>
+        <div class="form-group">
+          <label>Expiry Date</label>
+          <input type="date" id="expiry_date">
+        </div>
+      </div>
+      <button class="btn-add" onclick="addProduct()">➕ Add Product</button>
+    </div>
+  </section>
+
+  <!-- EMAIL ALERT SECTION -->
+<section id="email-alert">
+  <h2>📧 Send Expiry Alert</h2>
+  <div class="form-card">
+    <div class="form-row">
+      <div class="form-group">
+        <label>Email Address</label>
+        <input type="email" id="alert-email" placeholder="example@gmail.com">
+      </div>
+      <div class="form-group" style="display:flex; align-items:flex-end;">
+        <button class="btn-add" onclick="sendAlerts()">
+          📧 Send Alert Email
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+  <!-- ALERTS SECTION -->
+  <section id="alerts">
+    <h2>⚠️ Expiry Alerts <span id="alert-count" class="badge">0</span></h2>
+    <div id="alerts-list" class="alerts-list">
+      <p class="empty">No expiry alerts 🎉</p>
+    </div>
+  </section>
+
+  <!-- PRODUCTS TABLE -->
+  <section>
+    <h2>All Products</h2>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Category</th>
+            <th>Quantity</th>
+            <th>Expiry Date</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="products-table">
+          <tr><td colspan="6" class="empty">No products found</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <script>
+  const user = localStorage.getItem('user');
+if (!user) {
+    window.location.href = 'http://127.0.0.1:5000/login';
+}
+   else {
+    const userData = JSON.parse(user);
+    document.addEventListener('DOMContentLoaded', function() {
+      // Navbar-ல் user name காட்டு
+      const nav = document.querySelector('.nav-links');
+      nav.innerHTML += `
+        <span style="color:#00d4aa;font-size:0.9rem;">👤 ${userData.name}</span>
+        <a href="#" onclick="logout()" style="color:#ff6b35;">Logout</a>
+      `;
+    });
+  }
+
+  function logout() {
+    localStorage.removeItem('user');
+    window.location.href = '/login';
+  }
+</script>
+
+  <script src="script.js"></script>
+</body>
+</html>

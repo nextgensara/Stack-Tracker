@@ -4,96 +4,264 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>StockTracker - Login</title>
-  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: #020408;
+      color: #e0f0ff;
+      font-family: 'Rajdhani', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: 
+        radial-gradient(ellipse at 20% 50%, rgba(0,255,200,0.06) 0%, transparent 60%),
+        radial-gradient(ellipse at 80% 20%, rgba(0,170,255,0.06) 0%, transparent 60%),
+        radial-gradient(ellipse at 50% 90%, rgba(170,0,255,0.04) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: 
+        linear-gradient(rgba(0,255,200,0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,255,200,0.02) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+    }
+
     .auth-container {
-      max-width: 420px;
-      margin: 100px auto;
-      padding: 0 24px;
+      width: 100%;
+      max-width: 440px;
+      padding: 24px;
+      position: relative;
+      z-index: 1;
     }
+
     .auth-card {
-      background: #111827;
-      border: 1px solid rgba(255,255,255,0.07);
-      border-radius: 16px;
-      padding: 40px 36px;
+      background: rgba(0,255,200,0.02);
+      border: 1px solid rgba(0,255,200,0.15);
+      padding: 48px 40px;
+      position: relative;
+      clip-path: polygon(0 0, calc(100% - 24px) 0, 100% 24px, 100% 100%, 24px 100%, 0 calc(100% - 24px));
     }
+
+    .auth-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 80px; height: 2px;
+      background: #00ffcc;
+      box-shadow: 0 0 20px rgba(0,255,200,0.8);
+    }
+
+    .auth-card::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 2px; height: 80px;
+      background: #00ffcc;
+      box-shadow: 0 0 20px rgba(0,255,200,0.8);
+    }
+
     .auth-logo {
       text-align: center;
-      font-size: 1.6rem;
-      font-weight: 700;
-      color: #00d4aa;
+      font-family: 'Orbitron', monospace;
+      font-size: 1.4rem;
+      font-weight: 900;
+      color: #00ffcc;
       margin-bottom: 8px;
+      letter-spacing: 0.15em;
+      text-shadow: 0 0 20px rgba(0,255,200,0.8), 0 0 40px rgba(0,255,200,0.3);
+      animation: pulse-glow 3s ease-in-out infinite;
     }
+
+    @keyframes pulse-glow {
+      0%, 100% { text-shadow: 0 0 10px rgba(0,255,200,0.5); }
+      50% { text-shadow: 0 0 30px rgba(0,255,200,1), 0 0 60px rgba(0,255,200,0.4); }
+    }
+
     .auth-sub {
       text-align: center;
-      color: #7a8899;
-      font-size: 0.9rem;
-      margin-bottom: 32px;
+      color: #4a6080;
+      font-size: 0.82rem;
+      margin-bottom: 36px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      font-family: 'Orbitron', monospace;
     }
+
     .auth-tabs {
       display: flex;
       gap: 0;
-      margin-bottom: 28px;
-      background: #0a0f1e;
-      border-radius: 8px;
-      padding: 4px;
+      margin-bottom: 32px;
+      border-bottom: 1px solid rgba(0,255,200,0.15);
     }
+
     .auth-tab {
       flex: 1;
-      padding: 10px;
+      padding: 12px;
       text-align: center;
-      border-radius: 6px;
       cursor: pointer;
-      font-size: 0.9rem;
-      color: #7a8899;
+      font-size: 0.78rem;
+      color: #4a6080;
       transition: all 0.2s;
+      font-family: 'Orbitron', monospace;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -1px;
     }
+
     .auth-tab.active {
-      background: #00d4aa;
-      color: #0a0f1e;
-      font-weight: 700;
+      color: #00ffcc;
+      border-bottom-color: #00ffcc;
+      text-shadow: 0 0 10px rgba(0,255,200,0.5);
     }
+
     .auth-form { display: none; }
     .auth-form.active { display: block; }
-    .error-msg {
-      color: #ff6b35;
-      font-size: 0.85rem;
-      margin-top: 12px;
-      text-align: center;
+
+    .form-group { margin-bottom: 20px; }
+
+    .form-group label {
+      display: block;
+      font-size: 0.68rem;
+      font-weight: 700;
+      color: #00ffcc;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      font-family: 'Orbitron', monospace;
     }
-    .success-msg {
-      color: #00d4aa;
-      font-size: 0.85rem;
+
+    .form-group input {
+      width: 100%;
+      background: rgba(0,255,200,0.03);
+      border: 1px solid rgba(0,255,200,0.15);
+      border-radius: 2px;
+      padding: 12px 16px;
+      color: #e0f0ff;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1rem;
+      font-weight: 500;
+      outline: none;
+      transition: all 0.2s;
+    }
+
+    .form-group input:focus {
+      border-color: #00ffcc;
+      background: rgba(0,255,200,0.06);
+      box-shadow: 0 0 15px rgba(0,255,200,0.1);
+    }
+
+    .btn-login {
+      width: 100%;
+      background: transparent;
+      color: #00ffcc;
+      border: 1px solid #00ffcc;
+      padding: 13px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-family: 'Orbitron', monospace;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-top: 24px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-login::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: #00ffcc;
+      transform: translateX(-100%);
+      transition: transform 0.3s;
+      z-index: -1;
+    }
+
+    .btn-login:hover {
+      color: #020408;
+      box-shadow: 0 0 20px rgba(0,255,200,0.4);
+    }
+
+    .btn-login:hover::before { transform: translateX(0); }
+
+    .error-msg {
+      color: #ff3366;
+      font-size: 0.78rem;
       margin-top: 12px;
       text-align: center;
+      font-family: 'Orbitron', monospace;
+      letter-spacing: 0.05em;
+      text-shadow: 0 0 8px rgba(255,51,102,0.4);
+    }
+
+    .success-msg {
+      color: #00ffcc;
+      font-size: 0.78rem;
+      margin-top: 12px;
+      text-align: center;
+      font-family: 'Orbitron', monospace;
+      letter-spacing: 0.05em;
+      text-shadow: 0 0 8px rgba(0,255,200,0.4);
+    }
+
+    /* Corner decorations */
+    .corner-br {
+      position: absolute;
+      bottom: 0; right: 0;
+      width: 60px; height: 2px;
+      background: rgba(0,255,200,0.3);
+    }
+
+    .corner-br::after {
+      content: '';
+      position: absolute;
+      right: 0; bottom: 0;
+      width: 2px; height: 60px;
+      background: rgba(0,255,200,0.3);
     }
   </style>
 </head>
 <body>
   <div class="auth-container">
     <div class="auth-card">
-      <div class="auth-logo">📦 StockTracker</div>
-      <div class="auth-sub">Intelligent Inventory Management</div>
+      <div class="corner-br"></div>
 
-      <!-- TABS -->
+      <div class="auth-logo">⬡ STOCKTRACKER</div>
+      <div class="auth-sub">Inventory Management System</div>
+
       <div class="auth-tabs">
-        <div class="auth-tab active" onclick="switchTab('login')">Login</div>
-        <div class="auth-tab" onclick="switchTab('register')">Register</div>
+        <div class="auth-tab active" onclick="switchTab('login', this)">Login</div>
+        <div class="auth-tab" onclick="switchTab('register', this)">Register</div>
       </div>
 
       <!-- LOGIN FORM -->
       <div id="login-form" class="auth-form active">
         <div class="form-group">
           <label>Email</label>
-          <input type="email" id="login-email" placeholder="example@gmail.com">
+          <input type="email" id="login-email" placeholder="user@example.com" autocomplete="email">
         </div>
-        <div class="form-group" style="margin-top:16px;">
+        <div class="form-group">
           <label>Password</label>
-          <input type="password" id="login-password" placeholder="••••••••">
+          <input type="password" id="login-password" placeholder="••••••••" autocomplete="current-password">
         </div>
-        <button class="btn-add" style="width:100%;margin-top:24px;" onclick="loginUser()">
-          🔐 Login
-        </button>
+        <button class="btn-login" onclick="loginUser()">[ LOGIN ]</button>
         <div id="login-msg"></div>
       </div>
 
@@ -101,19 +269,17 @@
       <div id="register-form" class="auth-form">
         <div class="form-group">
           <label>Full Name</label>
-          <input type="text" id="reg-name" placeholder="John Doe">
+          <input type="text" id="reg-name" placeholder="Your Name" autocomplete="name">
         </div>
-        <div class="form-group" style="margin-top:16px;">
+        <div class="form-group">
           <label>Email</label>
-          <input type="email" id="reg-email" placeholder="example@gmail.com">
+          <input type="email" id="reg-email" placeholder="user@example.com" autocomplete="email">
         </div>
-        <div class="form-group" style="margin-top:16px;">
+        <div class="form-group">
           <label>Password</label>
-          <input type="password" id="reg-password" placeholder="••••••••">
+          <input type="password" id="reg-password" placeholder="••••••••" autocomplete="new-password">
         </div>
-        <button class="btn-add" style="width:100%;margin-top:24px;" onclick="registerUser()">
-          ✅ Register
-        </button>
+        <button class="btn-login" onclick="registerUser()">[ CREATE ACCOUNT ]</button>
         <div id="register-msg"></div>
       </div>
 
@@ -121,18 +287,18 @@
   </div>
 
   <script>
-    function switchTab(tab) {
+    function switchTab(tab, el) {
       document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
       document.querySelectorAll('.auth-form').forEach(f => f.classList.remove('active'));
       document.getElementById(tab + '-form').classList.add('active');
-      event.target.classList.add('active');
+      el.classList.add('active');
     }
 
     async function loginUser() {
       const email = document.getElementById('login-email').value;
       const password = document.getElementById('login-password').value;
       if (!email || !password) {
-        document.getElementById('login-msg').innerHTML = '<p class="error-msg">⚠️ எல்லாம் fill பண்ணுங்க!</p>';
+        document.getElementById('login-msg').innerHTML = '<p class="error-msg">⚠️ ALL FIELDS REQUIRED</p>';
         return;
       }
       const res = await fetch('/api/login', {
@@ -142,8 +308,8 @@
       });
       const data = await res.json();
       if (data.message.includes('✅')) {
-    localStorage.setItem('user', JSON.stringify(data));
-    window.location.href = 'http://127.0.0.1:5000/';
+        localStorage.setItem('user', JSON.stringify(data));
+        window.location.href = 'http://127.0.0.1:5000/';
       } else {
         document.getElementById('login-msg').innerHTML = `<p class="error-msg">${data.message}</p>`;
       }
@@ -154,7 +320,7 @@
       const email = document.getElementById('reg-email').value;
       const password = document.getElementById('reg-password').value;
       if (!name || !email || !password) {
-        document.getElementById('register-msg').innerHTML = '<p class="error-msg">⚠️ எல்லாம் fill பண்ணுங்க!</p>';
+        document.getElementById('register-msg').innerHTML = '<p class="error-msg">⚠️ ALL FIELDS REQUIRED</p>';
         return;
       }
       const res = await fetch('/api/register', {
@@ -164,8 +330,8 @@
       });
       const data = await res.json();
       if (data.message.includes('✅')) {
-        document.getElementById('register-msg').innerHTML = `<p class="success-msg">${data.message}</p>`;
-        setTimeout(() => switchTab('login'), 1500);
+        document.getElementById('register-msg').innerHTML = `<p class="success-msg">✅ ACCOUNT CREATED</p>`;
+        setTimeout(() => switchTab('login', document.querySelector('.auth-tab')), 1500);
       } else {
         document.getElementById('register-msg').innerHTML = `<p class="error-msg">${data.message}</p>`;
       }

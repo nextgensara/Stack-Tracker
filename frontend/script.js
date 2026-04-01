@@ -132,10 +132,12 @@ async function loadCharts() {
   try {
     const res = await fetch('/api/products');
     const products = await res.json();
+
     const categories = {};
     products.forEach(p => {
       categories[p.category] = (categories[p.category] || 0) + 1;
     });
+
     let good = 0, warning = 0, expired = 0;
     products.forEach(p => {
       const today = new Date();
@@ -145,43 +147,105 @@ async function loadCharts() {
       else if (daysLeft <= 7) warning++;
       else good++;
     });
+
+    const chartDefaults = {
+      color: '#00ffcc',
+      borderColor: 'rgba(0,255,200,0.1)',
+      gridColor: 'rgba(0,255,200,0.05)',
+    };
+
+    // Category Chart
     if (categoryChart) categoryChart.destroy();
     const ctx1 = document.getElementById('categoryChart');
     categoryChart = new Chart(ctx1, {
-      type: 'pie',
+      type: 'doughnut',
       data: {
         labels: Object.keys(categories),
         datasets: [{
           data: Object.values(categories),
-          backgroundColor: ['#00d4aa','#0097ff','#ff6b35','#8b5cf6','#ec4899'],
+          backgroundColor: [
+            'rgba(0,255,200,0.7)',
+            'rgba(0,170,255,0.7)',
+            'rgba(170,0,255,0.7)',
+            'rgba(255,51,102,0.7)',
+            'rgba(255,170,0,0.7)',
+          ],
+          borderColor: 'rgba(2,4,8,0.8)',
+          borderWidth: 3,
+          hoverOffset: 8,
         }]
       },
       options: {
+        cutout: '65%',
         plugins: {
-          legend: { labels: { color: '#f0f4ff' } }
+          legend: {
+            labels: {
+              color: '#00ffcc',
+              font: { family: 'Orbitron', size: 10 },
+              padding: 16,
+              usePointStyle: true,
+            }
+          }
+        },
+        animation: {
+          animateRotate: true,
+          duration: 1500,
+          easing: 'easeInOutQuart',
         }
       }
     });
+
+    // Expiry Chart
     if (expiryChart) expiryChart.destroy();
     const ctx2 = document.getElementById('expiryChart');
     expiryChart = new Chart(ctx2, {
       type: 'bar',
       data: {
-        labels: ['Good', 'Expiring Soon', 'Expired'],
+        labels: ['✅ Good', '⚠️ Expiring', '❌ Expired'],
         datasets: [{
           label: 'Products',
           data: [good, warning, expired],
-          backgroundColor: ['#00d4aa', '#0097ff', '#ff6b35'],
-          borderRadius: 8,
+          backgroundColor: [
+            'rgba(0,255,200,0.2)',
+            'rgba(255,170,0,0.2)',
+            'rgba(255,51,102,0.2)',
+          ],
+          borderColor: [
+            'rgba(0,255,200,0.8)',
+            'rgba(255,170,0,0.8)',
+            'rgba(255,51,102,0.8)',
+          ],
+          borderWidth: 1,
+          borderRadius: 2,
+          borderSkipped: false,
         }]
       },
       options: {
         plugins: {
-          legend: { labels: { color: '#f0f4ff' } }
+          legend: { display: false }
         },
         scales: {
-          x: { ticks: { color: '#7a8899' }, grid: { color: 'rgba(255,255,255,0.05)' } },
-          y: { ticks: { color: '#7a8899' }, grid: { color: 'rgba(255,255,255,0.05)' } }
+          x: {
+            ticks: {
+              color: '#00ffcc',
+              font: { family: 'Orbitron', size: 9 }
+            },
+            grid: { color: 'rgba(0,255,200,0.05)' },
+            border: { color: 'rgba(0,255,200,0.1)' }
+          },
+          y: {
+            ticks: {
+              color: '#4a6080',
+              font: { family: 'Orbitron', size: 9 },
+              stepSize: 1,
+            },
+            grid: { color: 'rgba(0,255,200,0.05)' },
+            border: { color: 'rgba(0,255,200,0.1)' }
+          }
+        },
+        animation: {
+          duration: 1500,
+          easing: 'easeInOutQuart',
         }
       }
     });
@@ -195,4 +259,20 @@ window.onload = function() {
   loadProducts();
   loadAlerts();
   loadCharts();
+}
+
+// ── SMS Alert Send ──
+async function sendSMS() {
+  try {
+    const res = await fetch('/api/send-sms', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' }
+    });
+    const data = await res.json();
+    document.getElementById('sms-msg').innerHTML = 
+      `<p style="color:#00d4aa;font-size:0.85rem;">${data.message}</p>`;
+  } catch(err) {
+    document.getElementById('sms-msg').innerHTML = 
+      `<p style="color:#ff6b35;font-size:0.85rem;">❌ Error: ${err.message}</p>`;
+  }
 }

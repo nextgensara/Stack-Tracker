@@ -20,17 +20,16 @@ def init_db():
         )
     ''')
 
-    # Users table — Login-க்கு
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS users (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             name TEXT,
             email TEXT UNIQUE,
             password TEXT,
+            phone TEXT,
             role TEXT DEFAULT "staff"
         )
     ''')
-
     conn.commit()
     conn.close()
     print("✅ Database ready!")

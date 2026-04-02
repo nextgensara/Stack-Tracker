@@ -314,7 +314,7 @@ if (existingUser) {
       const data = await res.json();
       if (data.message.includes('✅')) {
         localStorage.setItem('user', JSON.stringify(data));
-        window.location.href = 'http://127.0.0.1:5000/';
+      window.location.href = '/';
       } else {
         document.getElementById('login-msg').innerHTML = `<p class="error-msg">${data.message}</p>`;
       }

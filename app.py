@@ -84,12 +84,13 @@ def daily_alert():
     else:
         print("✅ No expiring products today!")
 
-import os
-if os.environ.get('WERKZEUG_RUN_MAIN') != 'true':
+try:
     scheduler = BackgroundScheduler()
     scheduler.add_job(daily_alert, 'cron', hour=9, minute=0)
     scheduler.start()
-
+except Exception as e:
+    print(f"Scheduler error: {e}")
+    
 @app.route('/')
 def index():
     return send_from_directory('frontend', 'index.html')

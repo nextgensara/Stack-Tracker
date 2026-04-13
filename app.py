@@ -36,7 +36,7 @@ def send_email_alert(product_name, expiry_date, quantity, to_email):
     """
     msg.attach(MIMEText(body, 'plain'))
     try:
-        server = smtplib.SMTP('smtp.gmail.com', 587)
+        server = smtplib.SMTP('smtp.gmail.com', 587, timeout=10)
         server.starttls()
         server.login(EMAIL, PASSWORD)
         server.sendmail(EMAIL, to_email, msg.as_string())

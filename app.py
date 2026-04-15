@@ -22,7 +22,7 @@ def send_email_alert(product_name, expiry_date, quantity, to_email):
         resend.api_key = os.environ.get('RESEND_API_KEY', '')
         resend.Emails.send({
             "from": "StockTracker <onboarding@resend.dev>",
-            "to": to_email,
+            "to": [to_email],
             "subject": f"⚠️ StockTracker Alert: {product_name} Expiring Soon!",
             "html": f"""
             <h2>⚠️ Expiry Alert - StockTracker</h2>
@@ -108,7 +108,6 @@ def get_stats():
         "expiring_soon": expiring,
         "total_stock": stock
     })
-
 @app.route('/api/send-alerts', methods=['POST'])
 def send_alerts():
     data = request.json
